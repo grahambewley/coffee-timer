@@ -1,46 +1,39 @@
 import styled from 'styled-components';
+import Label from './Label';
 
 const Container = styled.div`
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
 `;
 
-const Label = styled.p`
-  color: #f1f1f1;
-  text-align: center;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-`;
 const PickerWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 2rem;
+  margin-top: 1rem;
 `;
 const IncButton = styled.button`
-  background: white;
+  background: rgba(255, 255, 255, 0.8);
   outline: none;
   border: none;
   border-radius: 10px;
-  font-size: 2rem;
-  font-family: monospace;
+  font-size: 3rem;
+  line-height: 1;
+  font-family: 'Source Code Pro', monospace;
   font-weight: bold;
   padding: 0.25rem 0.75rem;
 `;
 const DisplayContainer = styled.div`
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   padding: 0.25rem 0.75rem;
   width: max-content;
   position: relative;
 `;
 const Value = styled.span`
-  font-size: 4rem;
+  font-size: 5rem;
   font-weight: 600;
-  font-family: monospace;
+  font-family: 'Source Code Pro', monospace;
   text-align: center;
   line-height: 1;
   white-space: nowrap;

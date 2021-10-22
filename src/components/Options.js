@@ -1,16 +1,28 @@
 import { useState } from 'react';
+import styled from 'styled-components';
 import Picker from './Picker';
+import Ratio from './Ratio';
 
-export default function Options() {
-  const [units] = useState({
-    coffee: 'g',
-    water: 'ml'
-  });
-  const [values, setValues] = useState({
-    coffee: 15,
-    water: 250
-  });
+const Container = styled.div`
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
+const BrewButton = styled.button`
+  padding: 1.5rem 2.5rem;
+  font-size: 3rem;
+  background-color: #fb3640;
+  border-radius: 2000px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  border: none;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1;
+  font-family: 'Source Code Pro', monospace;
+`;
+
+export default function Options({ units, values, setValues, showBrewWindow }) {
   function incrementCoffee() {
     const tempValues = values;
     setValues({
@@ -46,7 +58,7 @@ export default function Options() {
   }
   return (
     <>
-      <div>
+      <Container>
         <Picker
           label="Coffee"
           value={values.coffee}
@@ -61,7 +73,11 @@ export default function Options() {
           increment={incrementWater}
           decrement={decrementWater}
         />
-      </div>
+
+        <Ratio values={values} />
+
+        <BrewButton onClick={showBrewWindow}>Let's Brew!</BrewButton>
+      </Container>
     </>
   );
 }
