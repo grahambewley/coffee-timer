@@ -23,6 +23,10 @@ function App() {
     coffee: 15,
     water: 250
   });
+  const [options, setOptions] = useState({
+    bloomRatio: 2, // water-to-coffee ratio for blooming
+    bloomDuration: 45 // in seconds
+  });
 
   return (
     <>
@@ -35,7 +39,14 @@ function App() {
         setValues={setValues}
         showBrewWindow={() => setBrewWindowShowing(true)}
       />
-      {brewWindowShowing && <BrewWindow />}
+      {brewWindowShowing && (
+        <BrewWindow
+          values={values}
+          units={units}
+          options={options}
+          hideBrewWindow={() => setBrewWindowShowing(false)}
+        />
+      )}
     </>
   );
 }

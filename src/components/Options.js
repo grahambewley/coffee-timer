@@ -13,7 +13,7 @@ const Container = styled.div`
 const BrewButton = styled.button`
   padding: 1.5rem 2.5rem;
   font-size: 3rem;
-  background-color: #fb3640;
+  background-color: var(--color-red);
   border-radius: 2000px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
   border: none;

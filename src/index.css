@@ -1,3 +1,9 @@
+:root {
+  --color-red: #fb3640;
+  --color-brown: #362d28;
+  --font-monospace: 'Source Code Pro', monospace;
+}
+
 *,
 *::before,
 *::after {
