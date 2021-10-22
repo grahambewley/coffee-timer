@@ -17,11 +17,12 @@ const IncButton = styled.button`
   outline: none;
   border: none;
   border-radius: 10px;
-  font-size: 3rem;
+  font-size: 4rem;
+  color: var(--color-brown);
   line-height: 1;
   font-family: 'Source Code Pro', monospace;
   font-weight: bold;
-  padding: 0.25rem 0.75rem;
+  padding: 0.25rem 1rem;
 `;
 const DisplayContainer = styled.div`
   background-color: rgba(255, 255, 255, 0.8);
@@ -31,8 +32,9 @@ const DisplayContainer = styled.div`
   position: relative;
 `;
 const Value = styled.span`
-  font-size: 5rem;
+  font-size: 6rem;
   font-weight: 600;
+  color: var(--color-brown);
   font-family: 'Source Code Pro', monospace;
   text-align: center;
   line-height: 1;
