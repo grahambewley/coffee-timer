@@ -1,9 +1,8 @@
-import styled from 'styled-components';
 import { useState } from 'react';
 import Picker from './Picker';
 
 export default function Options() {
-  const [units, setUnits] = useState({
+  const [units] = useState({
     coffee: 'g',
     water: 'ml'
   });
