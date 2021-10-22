@@ -24,7 +24,7 @@ const Header = styled.header`
 function App() {
   const [brewWindowShowing, setBrewWindowShowing] = useState(false);
 
-  const [units, setUnits] = useState({
+  const [units] = useState({
     coffee: 'g',
     water: 'ml'
   });
@@ -32,7 +32,7 @@ function App() {
     coffee: 15,
     water: 250
   });
-  const [options, setOptions] = useState({
+  const [options] = useState({
     bloomRatio: 2, // water-to-coffee ratio for blooming
     bloomDuration: 45 // in seconds
   });
