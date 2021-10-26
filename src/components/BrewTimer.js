@@ -17,6 +17,7 @@ const TimeWeightElement = styled.div`
   border-radius: 4px;
   line-height: 1;
   border: 2px solid rgba(0, 0, 0, 0.05);
+  position: relative;
 
   .label {
     text-transform: uppercase;
@@ -33,6 +34,15 @@ const TimeWeightElement = styled.div`
     text-align: center;
     font-family: var(--font-monospace);
     font-size: 3.6rem;
+  }
+
+  .small-unit {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    font-size: 1.2em;
+    color: var(--color-font-light);
+    font-family: var(--font-monospace);
   }
 `;
 
@@ -86,13 +96,37 @@ export default function BrewTimer({
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [currentStep, setCurrentStep] = useState(1); // pourBloom, letBloom, firstPour, secondPour
+  const [currentWeight, setCurrentWeight] = useState(0);
 
   useEffect(() => {
-    let seconds = Math.floor((elapsedMilliseconds / 1000) % 60);
-    let minutes = Math.floor(elapsedMilliseconds / 1000 / 60);
+    const seconds = Math.floor(elapsedMilliseconds / 1000);
+    const displaySeconds = Math.floor((elapsedMilliseconds / 1000) % 60);
+    const displayMinutes = Math.floor(elapsedMilliseconds / 1000 / 60);
 
-    setSeconds(seconds);
-    setMinutes(minutes);
+    setSeconds(displaySeconds);
+    setMinutes(displayMinutes);
+
+    if (timerRunning && seconds <= options.bloomDuration) {
+      setCurrentWeight(bloomAmount);
+    }
+    // Timer greater than bloom but less than bloom + 30
+    else if (
+      seconds > options.bloomDuration &&
+      seconds <= options.bloomDuration + 30
+    ) {
+      setCurrentStep(3);
+      // Determine weight
+    }
+    // Timer greater than bloom + 30 but less than bloom + 60
+    else if (
+      seconds > options.bloomDuration + 30 &&
+      seconds <= options.bloomDuration + 60
+    ) {
+      setCurrentStep(4);
+      // Determine weight
+    } else {
+      resetTimer();
+    }
   }, [elapsedMilliseconds]);
 
   function nextStep() {
@@ -138,7 +172,8 @@ export default function BrewTimer({
         </TimeWeightElement>
         <TimeWeightElement>
           <span className="label">Weight</span>
-          <p className="value">000</p>
+          <p className="value">{currentWeight}</p>
+          <span className="small-unit">g/ml</span>
         </TimeWeightElement>
       </TimeWeightWrapper>
 
