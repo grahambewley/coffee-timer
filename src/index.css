@@ -1,6 +1,10 @@
 :root {
   --color-red: #fb3640;
+  --color-light-red: #fd868c;
   --color-brown: #362d28;
+  --color-font-medium: #666;
+  --color-font-light: #999;
+
   --font-monospace: 'Source Code Pro', monospace;
 }
 
@@ -19,6 +23,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
+  color: #222;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #362d28;

@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import BrewPreview from './BrewPreview';
+import BrewTimer from './BrewTimer';
 
 const FixedWrapper = styled.div`
   position: fixed;
@@ -29,13 +31,26 @@ const CloseButton = styled.button`
 `;
 
 export default function BrewWindow({ values, options, units, hideBrewWindow }) {
+  // const [showPreview, setShowPreview] = useState(true);
+  const [showTimer, setShowTimer] = useState(false);
+
   return (
     <FixedWrapper>
       <Container>
         <CloseButton onClick={hideBrewWindow}>
           &#8592; Back to Setup
         </CloseButton>
-        <BrewPreview options={options} values={values} units={units} />
+
+        {!showTimer ? (
+          <BrewPreview
+            options={options}
+            values={values}
+            units={units}
+            showTimer={() => setShowTimer(true)}
+          />
+        ) : (
+          <BrewTimer />
+        )}
       </Container>
     </FixedWrapper>
   );
