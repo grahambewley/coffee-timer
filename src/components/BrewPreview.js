@@ -85,12 +85,15 @@ const WeightLabelHighlight = styled.span`
   border: 2px solid rgba(0, 0, 0, 0.05);
 `;
 
-export default function BrewPreview({ options, values, units, showTimer }) {
-  const bloomAmount = options.bloomRatio * values.coffee;
-
-  const firstPour = values.water * 0.6 - bloomAmount;
-  const secondPour = values.water * 0.4;
-
+export default function BrewPreview({
+  options,
+  values,
+  units,
+  showTimer,
+  bloomAmount,
+  firstPour,
+  secondPour
+}) {
   function convertSeconds(seconds) {
     let minutes = Math.floor(seconds / 60);
     let remainderSeconds = seconds % 60;
@@ -147,7 +150,7 @@ export default function BrewPreview({ options, values, units, showTimer }) {
             {firstPour}
             {units.water}
           </InstructionHighlight>{' '}
-          of water over <InstructionHighlight> 30 seconds</InstructionHighlight>
+          of water in <InstructionHighlight> 30 seconds</InstructionHighlight>
         </Instruction>
         <WeightLabel>
           Total:{' '}
@@ -168,7 +171,7 @@ export default function BrewPreview({ options, values, units, showTimer }) {
             {secondPour}
             {units.water}
           </InstructionHighlight>{' '}
-          of water over <InstructionHighlight> 30 seconds</InstructionHighlight>
+          of water in <InstructionHighlight> 30 seconds</InstructionHighlight>
         </Instruction>
         <WeightLabel>
           Total:{' '}
@@ -181,7 +184,7 @@ export default function BrewPreview({ options, values, units, showTimer }) {
           </WeightLabelHighlight>
         </WeightLabel>
       </InstructionWrapper>
-      <BigButton onClick={showTimer}>Go To Timer</BigButton>
+      <BigButton onClick={showTimer}>Looks Good!</BigButton>
     </Container>
   );
 }
