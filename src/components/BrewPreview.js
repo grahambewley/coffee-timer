@@ -1,4 +1,10 @@
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCoffee,
+  faStopwatch,
+  faTint
+} from '@fortawesome/free-solid-svg-icons';
 import BigButton from './BigButton';
 
 const Container = styled.div`
@@ -46,13 +52,20 @@ const PreviewItem = styled.div`
 `;
 const InstructionWrapper = styled.div`
   width: 100%;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #fafafa;
+  border-radius: 4px;
+  border: 2px solid rgba(0, 0, 0, 0.05);
+
+  & *:last-child {
+    margin-bottom: 0;
+  }
 `;
 const Label = styled.p`
   padding-bottom: 1rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding-left: 5px;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--color-font-medium);
@@ -61,28 +74,40 @@ const Label = styled.p`
 `;
 const Instruction = styled.p`
   font-size: 1.8rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 `;
 const InstructionHighlight = styled.span`
   font-weight: bold;
 `;
-const WeightLabel = styled.p`
-  padding-left: 5px;
+
+const TimeWeightIndicatorWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+const TimeWeightLabel = styled.p`
   text-transform: uppercase;
   color: var(--color-font-medium);
   letter-spacing: 1px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 `;
-const WeightLabelHighlight = styled.span`
-  font-weight: bold;
-  padding: 1px 3px;
-  color: #222;
-  background-color: #fafafa;
+const TimeWeightIndicator = styled.div`
+  padding: 0.5rem;
+  background-color: #fff;
   border-radius: 4px;
   line-height: 1;
   border: 2px solid rgba(0, 0, 0, 0.05);
+
+  span {
+    text-transform: uppercase;
+    color: var(--color-font-medium);
+    letter-spacing: 1px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: 4px;
+  }
 `;
 
 export default function BrewPreview({
@@ -152,16 +177,20 @@ export default function BrewPreview({
           </InstructionHighlight>{' '}
           of water in <InstructionHighlight> 30 seconds</InstructionHighlight>
         </Instruction>
-        <WeightLabel>
-          Total:{' '}
-          <WeightLabelHighlight>
-            {bloomAmount + firstPour + ' ' + units.water}
-          </WeightLabelHighlight>{' '}
-          After{' '}
-          <WeightLabelHighlight>
-            {convertSeconds(options.bloomDuration + 30)}
-          </WeightLabelHighlight>
-        </WeightLabel>
+        <TimeWeightLabel>Total:</TimeWeightLabel>
+        <TimeWeightIndicatorWrapper>
+          <TimeWeightIndicator>
+            <FontAwesomeIcon icon={faTint} color="var(--color-font-light)" />
+            <span>{bloomAmount + firstPour + ' ' + units.water}</span>
+          </TimeWeightIndicator>
+          <TimeWeightIndicator>
+            <FontAwesomeIcon
+              icon={faStopwatch}
+              color="var(--color-font-light)"
+            />
+            <span>{convertSeconds(options.bloomDuration + 30)}</span>
+          </TimeWeightIndicator>
+        </TimeWeightIndicatorWrapper>
       </InstructionWrapper>
 
       <InstructionWrapper>
@@ -173,18 +202,24 @@ export default function BrewPreview({
           </InstructionHighlight>{' '}
           of water in <InstructionHighlight> 30 seconds</InstructionHighlight>
         </Instruction>
-        <WeightLabel>
-          Total:{' '}
-          <WeightLabelHighlight>
-            {bloomAmount + firstPour + secondPour + ' ' + units.water}
-          </WeightLabelHighlight>{' '}
-          After{' '}
-          <WeightLabelHighlight>
-            {convertSeconds(options.bloomDuration + 60)}
-          </WeightLabelHighlight>
-        </WeightLabel>
+        <TimeWeightLabel>Total:</TimeWeightLabel>
+        <TimeWeightIndicatorWrapper>
+          <TimeWeightIndicator>
+            <FontAwesomeIcon icon={faTint} color="var(--color-font-light)" />
+            <span>
+              {bloomAmount + firstPour + secondPour + ' ' + units.water}
+            </span>
+          </TimeWeightIndicator>
+          <TimeWeightIndicator>
+            <FontAwesomeIcon
+              icon={faStopwatch}
+              color="var(--color-font-light)"
+            />
+            <span>{convertSeconds(options.bloomDuration + 60)}</span>
+          </TimeWeightIndicator>
+        </TimeWeightIndicatorWrapper>
       </InstructionWrapper>
-      <BigButton onClick={showTimer}>Looks Good!</BigButton>
+      <BigButton onClick={showTimer}>Let's Brew!</BigButton>
     </Container>
   );
 }
