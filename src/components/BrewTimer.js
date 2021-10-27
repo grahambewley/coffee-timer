@@ -71,6 +71,8 @@ const Step = styled.p`
     transform: scale(0.9);
   }
 `;
+
+const TimedStep = Step;
 const ButtonStepWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -84,14 +86,7 @@ const ButtonStepWrapper = styled.div`
 `;
 let timerInterval;
 
-export default function BrewTimer({
-  options,
-  values,
-  units,
-  bloomAmount,
-  firstPour,
-  secondPour
-}) {
+export default function BrewTimer({ options, values, units, bloomAmount }) {
   const [timerRunning, setTimerRunning] = useState(false);
   const [elapsedMilliseconds, setElapsedMilliseconds] = useState(0);
   const [seconds, setSeconds] = useState(0);
@@ -107,6 +102,7 @@ export default function BrewTimer({
     setSeconds(displaySeconds);
     setMinutes(displayMinutes);
 
+    // If timer is running but is within bloom time, show bloom weight
     if (timerRunning && seconds <= options.bloomDuration) {
       setCurrentWeight(bloomAmount);
     }
@@ -161,6 +157,9 @@ export default function BrewTimer({
     }
   }
 
+  let pourTotal = bloomAmount;
+  let timeTotal = options.bloomDuration;
+
   return (
     <Container>
       <TimeWeightWrapper>
@@ -192,21 +191,29 @@ export default function BrewTimer({
             Start Timer
           </SmallButton>
         </ButtonStepWrapper>
+
         {/* Let Bloom */}
         <Step className={currentStep === 2 && 'active'}>
           Let cofffee bloom for {options.bloomDuration} seconds
         </Step>
 
-        {/* First Pour */}
-        <Step className={currentStep === 3 && 'active'}>
-          Pour {firstPour}
-          {units.water} of water in 30 seconds
-        </Step>
-        {/* Second Pour */}
-        <Step className={currentStep === 4 && 'active'}>
-          Pour {secondPour}
-          {units.water} of water in 30 seconds
-        </Step>
+        {/* Pours */}
+        {options.pours.map((pour, index) => {
+          let pourAmount = values.water * pour.percentage;
+          if (index === 0) {
+            pourAmount -= bloomAmount;
+          }
+
+          pourTotal += pourAmount;
+          timeTotal += pour.duration;
+
+          return (
+            <TimedStep className={currentStep === index + 3 && 'active'}>
+              Pour {pourAmount}
+              {units.water} of water in {pour.duration} seconds
+            </TimedStep>
+          );
+        })}
       </StepsWrapper>
     </Container>
   );

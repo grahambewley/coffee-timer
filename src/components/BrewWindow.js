@@ -68,8 +68,6 @@ export default function BrewWindow({ values, options, units, hideBrewWindow }) {
             values={values}
             units={units}
             bloomAmount={bloomAmount}
-            firstPour={firstPour}
-            secondPour={secondPour}
             showTimer={() => setShowTimer(true)}
           />
         ) : (
@@ -78,8 +76,6 @@ export default function BrewWindow({ values, options, units, hideBrewWindow }) {
             values={values}
             units={units}
             bloomAmount={bloomAmount}
-            firstPour={firstPour}
-            secondPour={secondPour}
           />
         )}
       </Container>

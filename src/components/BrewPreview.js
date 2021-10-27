@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCoffee,
-  faStopwatch,
-  faTint
-} from '@fortawesome/free-solid-svg-icons';
+import { faStopwatch, faTint } from '@fortawesome/free-solid-svg-icons';
 import BigButton from './BigButton';
 
 const Container = styled.div`
@@ -76,9 +72,6 @@ const Instruction = styled.p`
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
 `;
-const InstructionHighlight = styled.span`
-  font-weight: bold;
-`;
 
 const TimeWeightIndicatorWrapper = styled.div`
   display: flex;
@@ -115,10 +108,11 @@ export default function BrewPreview({
   values,
   units,
   showTimer,
-  bloomAmount,
-  firstPour,
-  secondPour
+  bloomAmount
 }) {
+  let pourTotal = bloomAmount;
+  let timeTotal = options.bloomDuration;
+
   function convertSeconds(seconds) {
     let minutes = Math.floor(seconds / 60);
     let remainderSeconds = seconds % 60;
@@ -157,68 +151,54 @@ export default function BrewPreview({
       <InstructionWrapper>
         <Label>Bloom</Label>
         <Instruction>
-          <InstructionHighlight>
+          <strong>
             {bloomAmount}
             {units.water}
-          </InstructionHighlight>{' '}
-          of water for{' '}
-          <InstructionHighlight>
-            {options.bloomDuration} seconds
-          </InstructionHighlight>
+          </strong>{' '}
+          of water for <strong>{options.bloomDuration} seconds</strong>
         </Instruction>
       </InstructionWrapper>
 
-      <InstructionWrapper>
-        <Label>First Pour</Label>
-        <Instruction>
-          <InstructionHighlight>
-            {firstPour}
-            {units.water}
-          </InstructionHighlight>{' '}
-          of water in <InstructionHighlight> 30 seconds</InstructionHighlight>
-        </Instruction>
-        <TimeWeightLabel>Total:</TimeWeightLabel>
-        <TimeWeightIndicatorWrapper>
-          <TimeWeightIndicator>
-            <FontAwesomeIcon icon={faTint} color="var(--color-font-light)" />
-            <span>{bloomAmount + firstPour + ' ' + units.water}</span>
-          </TimeWeightIndicator>
-          <TimeWeightIndicator>
-            <FontAwesomeIcon
-              icon={faStopwatch}
-              color="var(--color-font-light)"
-            />
-            <span>{convertSeconds(options.bloomDuration + 30)}</span>
-          </TimeWeightIndicator>
-        </TimeWeightIndicatorWrapper>
-      </InstructionWrapper>
+      {options.pours.map((pour, index) => {
+        let pourAmount = values.water * pour.percentage;
+        if (index === 0) {
+          pourAmount -= bloomAmount;
+        }
 
-      <InstructionWrapper>
-        <Label>Then Pour</Label>
-        <Instruction>
-          <InstructionHighlight>
-            {secondPour}
-            {units.water}
-          </InstructionHighlight>{' '}
-          of water in <InstructionHighlight> 30 seconds</InstructionHighlight>
-        </Instruction>
-        <TimeWeightLabel>Total:</TimeWeightLabel>
-        <TimeWeightIndicatorWrapper>
-          <TimeWeightIndicator>
-            <FontAwesomeIcon icon={faTint} color="var(--color-font-light)" />
-            <span>
-              {bloomAmount + firstPour + secondPour + ' ' + units.water}
-            </span>
-          </TimeWeightIndicator>
-          <TimeWeightIndicator>
-            <FontAwesomeIcon
-              icon={faStopwatch}
-              color="var(--color-font-light)"
-            />
-            <span>{convertSeconds(options.bloomDuration + 60)}</span>
-          </TimeWeightIndicator>
-        </TimeWeightIndicatorWrapper>
-      </InstructionWrapper>
+        pourTotal += pourAmount;
+        timeTotal += pour.duration;
+
+        return (
+          <InstructionWrapper key={index}>
+            <Label>Pour</Label>
+            <Instruction>
+              <strong>
+                {pourAmount}
+                {units.water}
+              </strong>{' '}
+              of water in <strong> {pour.duration} seconds</strong>
+            </Instruction>
+            <TimeWeightLabel>Total:</TimeWeightLabel>
+            <TimeWeightIndicatorWrapper>
+              <TimeWeightIndicator>
+                <FontAwesomeIcon
+                  icon={faTint}
+                  color="var(--color-font-light)"
+                />
+                <span>{pourTotal + ' ' + units.water}</span>
+              </TimeWeightIndicator>
+              <TimeWeightIndicator>
+                <FontAwesomeIcon
+                  icon={faStopwatch}
+                  color="var(--color-font-light)"
+                />
+                <span>{convertSeconds(timeTotal)}</span>
+              </TimeWeightIndicator>
+            </TimeWeightIndicatorWrapper>
+          </InstructionWrapper>
+        );
+      })}
+
       <BigButton onClick={showTimer}>Let's Brew!</BigButton>
     </Container>
   );
