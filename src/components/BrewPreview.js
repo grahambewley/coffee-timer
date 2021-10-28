@@ -74,7 +74,6 @@ const Instruction = styled.div`
 
 const IndicatorWrapper = styled.div`
   display: flex;
-  align-items: center;
   gap: 0.5rem;
 `;
 const IndicatorLabel = styled.p`

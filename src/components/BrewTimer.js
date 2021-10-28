@@ -15,11 +15,7 @@ const TimeWeightWrapper = styled.div`
   gap: 1rem;
   margin-bottom: 4rem;
 `;
-const TimeWeightIndicatorWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
+
 const TimeWeightElement = styled.div`
   flex: 1 0 0;
   padding: 0.5rem;
@@ -32,7 +28,7 @@ const TimeWeightElement = styled.div`
   .label {
     text-transform: uppercase;
     color: var(--color-light-red);
-    font-size: 0.8rem;
+    font-size: 1rem;
     font-weight: bold;
     display: block;
     text-align: center;
@@ -67,42 +63,45 @@ const StepsHeader = styled.p`
   font-size: 1.4rem;
   font-weight: bold;
 `;
-const StepsWrapper = styled.div``;
-const Step = styled.p`
-  font-size: 1.8rem;
+
+const Step = styled.div`
+  padding: 1rem;
+  background-color: #fafafa;
+  border-radius: 4px;
+  border: 2px solid rgba(0, 0, 0, 0.05);
   margin-bottom: 2rem;
-  transform-origin: left;
   transition: all 0.4s;
 
-  &:not(.active) {
-    color: var(--color-font-light);
-    filter: blur(0.5px);
-    transform: scale(0.9);
+  p {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  & *:last-child {
+    margin-bottom: 0;
+  }
+
+  &.active {
+    border: 2px solid var(--color-faint-red);
   }
 `;
 
-const TimedStep = styled.div`
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
-  transform-origin: left;
-  transition: all 0.4s;
-
-  &:not(.active) {
-    color: var(--color-font-light);
-    filter: blur(0.5px);
-    transform: scale(0.9);
-  }
-`;
 const ButtonStepWrapper = styled.div`
   display: flex;
   align-items: center;
   font-size: 1.8rem;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 
   &:not(.active) {
     color: var(--color-font-light);
   }
+`;
+
+const IndicatorWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 `;
 
 let timerInterval;
@@ -115,6 +114,7 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
   const [currentStep, setCurrentStep] = useState(1); // pourBloom, letBloom, firstPour, secondPour
   const [currentWeight, setCurrentWeight] = useState(0);
 
+  // Millisecond timer side-effects
   useEffect(() => {
     const seconds = Math.floor(elapsedMilliseconds / 1000);
     const displaySeconds = Math.floor((elapsedMilliseconds / 1000) % 60);
@@ -207,11 +207,13 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
       </TimeWeightWrapper>
 
       <StepsHeader>Steps:</StepsHeader>
-      <StepsWrapper>
+      <div>
         {/* Pour Bloom */}
         <Step className={currentStep === 1 && 'active'}>
-          Pour {bloomAmount}
-          {units.water} water to begin bloom.
+          <p>
+            Pour {bloomAmount}
+            {units.water} water to begin bloom.
+          </p>
         </Step>
 
         {/* Start Timer */}
@@ -223,7 +225,7 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
 
         {/* Let Bloom */}
         <Step className={currentStep === 2 && 'active'}>
-          Let cofffee bloom for {options.bloomDuration} seconds
+          <p>Let cofffee bloom for {options.bloomDuration} seconds</p>
         </Step>
 
         {/* Pours */}
@@ -237,13 +239,12 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
           timeTotal += pour.duration;
 
           return (
-            <TimedStep
-              key={index}
-              className={currentStep === index + 3 && 'active'}
-            >
-              Pour {pourAmount}
-              {units.water} of water in {pour.duration} seconds
-              <TimeWeightIndicatorWrapper>
+            <Step key={index} className={currentStep === index + 3 && 'active'}>
+              <p>
+                Pour {pourAmount}
+                {units.water} of water in {pour.duration} seconds
+              </p>
+              <IndicatorWrapper>
                 <TimeWeightIndicator>
                   <FontAwesomeIcon
                     icon={faTint}
@@ -258,11 +259,11 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
                   />
                   <span>{convertSeconds(timeTotal)}</span>
                 </TimeWeightIndicator>
-              </TimeWeightIndicatorWrapper>
-            </TimedStep>
+              </IndicatorWrapper>
+            </Step>
           );
         })}
-      </StepsWrapper>
+      </div>
     </Container>
   );
 }
