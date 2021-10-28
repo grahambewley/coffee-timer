@@ -104,6 +104,7 @@ const ButtonStepWrapper = styled.div`
     color: var(--color-font-light);
   }
 `;
+
 let timerInterval;
 
 export default function BrewTimer({ options, values, units, bloomAmount }) {
