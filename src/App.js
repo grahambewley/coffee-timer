@@ -34,10 +34,10 @@ function App() {
   });
   const [options] = useState({
     bloomRatio: 2, // water-to-coffee ratio for blooming
-    bloomDuration: 45, // in seconds
+    bloomDuration: 5, // in seconds
     pours: [
-      { percentage: 0.6, duration: 30 },
-      { percentage: 0.4, duration: 30 }
+      { percentage: 0.6, duration: 10 },
+      { percentage: 0.4, duration: 15 }
     ]
   });
 

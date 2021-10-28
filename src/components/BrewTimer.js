@@ -109,57 +109,65 @@ let timerInterval;
 export default function BrewTimer({ options, values, units, bloomAmount }) {
   const [timerRunning, setTimerRunning] = useState(false);
   const [elapsedMilliseconds, setElapsedMilliseconds] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
+
+  const [displaySeconds, setDisplaySeconds] = useState(0);
+  const [displayMinutes, setDisplayMinutes] = useState(0);
+
   const [currentStep, setCurrentStep] = useState(1); // pourBloom, letBloom, firstPour, secondPour
-  const [currentWeight, setCurrentWeight] = useState(0);
+
+  const [displayWeight, setDisplayWeight] = useState(0);
+
+  const pourEndSeconds = options.pours.map((pour, index) => {
+    let dur = options.bloomDuration + pour.duration;
+    if (index > 0) {
+      for (let i = 0; i < index; i++) {
+        dur += options.pours[i].duration;
+      }
+    }
+    return dur;
+  });
 
   // Millisecond timer side-effects
   useEffect(() => {
-    const seconds = Math.floor(elapsedMilliseconds / 1000);
+    const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
+
     const displaySeconds = Math.floor((elapsedMilliseconds / 1000) % 60);
     const displayMinutes = Math.floor(elapsedMilliseconds / 1000 / 60);
 
-    setSeconds(displaySeconds);
-    setMinutes(displayMinutes);
+    setDisplaySeconds(displaySeconds);
+    setDisplayMinutes(displayMinutes);
 
-    // If timer is running but is within bloom time, show bloom weight
-    if (timerRunning && seconds <= options.bloomDuration) {
-      setCurrentWeight(bloomAmount);
+    if (timerRunning && currentStep === 2) {
+      setDisplayWeight(bloomAmount);
     }
-    // Timer greater than bloom but less than bloom + 30
-    else if (
-      seconds > options.bloomDuration &&
-      seconds <= options.bloomDuration + 30
-    ) {
-      setCurrentStep(3);
-      // Determine weight
+
+    if (timerRunning && elapsedSeconds >= options.bloomDuration) {
+      let tempCurrentStep = 3;
+
+      for (let i = 0; i < pourEndSeconds.length; i++) {
+        if (elapsedSeconds >= pourEndSeconds[i]) {
+          tempCurrentStep += 1;
+        }
+      }
+      setCurrentStep(tempCurrentStep);
     }
-    // Timer greater than bloom + 30 but less than bloom + 60
-    else if (
-      seconds > options.bloomDuration + 30 &&
-      seconds <= options.bloomDuration + 60
-    ) {
-      setCurrentStep(4);
-      // Determine weight
-    } else {
+  }, [elapsedMilliseconds, pourEndSeconds]);
+
+  useEffect(() => {
+    if (currentStep > 2 + options.pours.length) {
       resetTimer();
     }
-  }, [elapsedMilliseconds]);
-
-  function nextStep() {
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
-    }
-  }
+  }, [currentStep]);
 
   function startTimer() {
     if (!timerRunning) {
       setTimerRunning(true);
       const start = Date.now();
 
+      // Step 1 is pouring water to start
+      // Step 2 is bloom time - move to this step
       if (currentStep === 1) {
-        nextStep();
+        setCurrentStep(2);
       }
 
       timerInterval = setInterval(() => {
@@ -173,7 +181,7 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
   function resetTimer() {
     if (timerRunning) {
       setTimerRunning(false);
-      setElapsedMilliseconds(0);
+      // setElapsedMilliseconds(0);
       clearInterval(timerInterval);
     }
   }
@@ -186,6 +194,7 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
 
     return timeString;
   }
+
   let pourTotal = bloomAmount;
   let timeTotal = options.bloomDuration;
 
@@ -195,13 +204,13 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
         <TimeWeightElement>
           <span className="label">Timer</span>
           <p className="value">
-            {minutes.toString().padStart(2, '0')}:
-            {seconds.toString().padStart(2, '0')}
+            {displayMinutes.toString().padStart(2, '0')}:
+            {displaySeconds.toString().padStart(2, '0')}
           </p>
         </TimeWeightElement>
         <TimeWeightElement>
           <span className="label">Weight</span>
-          <p className="value">{currentWeight}</p>
+          <p className="value">{displayWeight}</p>
           <span className="small-unit">g/ml</span>
         </TimeWeightElement>
       </TimeWeightWrapper>
