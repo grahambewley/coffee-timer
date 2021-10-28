@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStopwatch, faTint } from '@fortawesome/free-solid-svg-icons';
 import BigButton from './BigButton';
+import TimeWeightIndicator from './TimeWeightIndicator';
 
 const Container = styled.div`
   padding: 2rem;
@@ -85,22 +86,6 @@ const TimeWeightLabel = styled.p`
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
-`;
-const TimeWeightIndicator = styled.div`
-  padding: 0.5rem;
-  background-color: #fff;
-  border-radius: 4px;
-  line-height: 1;
-  border: 2px solid rgba(0, 0, 0, 0.05);
-
-  span {
-    text-transform: uppercase;
-    color: var(--color-font-medium);
-    letter-spacing: 1px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-left: 4px;
-  }
 `;
 
 export default function BrewPreview({

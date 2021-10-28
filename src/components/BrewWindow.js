@@ -52,8 +52,6 @@ export default function BrewWindow({ values, options, units, hideBrewWindow }) {
   const [showTimer, setShowTimer] = useState(false);
 
   const bloomAmount = options.bloomRatio * values.coffee;
-  const firstPour = values.water * 0.6 - bloomAmount;
-  const secondPour = values.water * 0.4;
 
   return (
     <FixedWrapper>

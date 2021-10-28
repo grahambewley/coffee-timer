@@ -1,7 +1,11 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import SmallButton from './SmallButton';
+import TimeWeightIndicator from './TimeWeightIndicator';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStopwatch, faTint } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
   padding: 2rem;
@@ -10,6 +14,11 @@ const TimeWeightWrapper = styled.div`
   display: flex;
   gap: 1rem;
   margin-bottom: 4rem;
+`;
+const TimeWeightIndicatorWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `;
 const TimeWeightElement = styled.div`
   flex: 1 0 0;
@@ -72,7 +81,18 @@ const Step = styled.p`
   }
 `;
 
-const TimedStep = Step;
+const TimedStep = styled.div`
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  transform-origin: left;
+  transition: all 0.4s;
+
+  &:not(.active) {
+    color: var(--color-font-light);
+    filter: blur(0.5px);
+    transform: scale(0.9);
+  }
+`;
 const ButtonStepWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -157,6 +177,14 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
     }
   }
 
+  function convertSeconds(seconds) {
+    let minutes = Math.floor(seconds / 60);
+    let remainderSeconds = seconds % 60;
+
+    const timeString = `${minutes}:${remainderSeconds}`;
+
+    return timeString;
+  }
   let pourTotal = bloomAmount;
   let timeTotal = options.bloomDuration;
 
@@ -208,9 +236,28 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
           timeTotal += pour.duration;
 
           return (
-            <TimedStep className={currentStep === index + 3 && 'active'}>
+            <TimedStep
+              key={index}
+              className={currentStep === index + 3 && 'active'}
+            >
               Pour {pourAmount}
               {units.water} of water in {pour.duration} seconds
+              <TimeWeightIndicatorWrapper>
+                <TimeWeightIndicator>
+                  <FontAwesomeIcon
+                    icon={faTint}
+                    color="var(--color-font-light)"
+                  />
+                  <span>{pourTotal + ' ' + units.water}</span>
+                </TimeWeightIndicator>
+                <TimeWeightIndicator>
+                  <FontAwesomeIcon
+                    icon={faStopwatch}
+                    color="var(--color-font-light)"
+                  />
+                  <span>{convertSeconds(timeTotal)}</span>
+                </TimeWeightIndicator>
+              </TimeWeightIndicatorWrapper>
             </TimedStep>
           );
         })}
