@@ -18,7 +18,7 @@ const TimeWeightWrapper = styled.div`
 
 const TimeWeightElement = styled.div`
   flex: 1 0 0;
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 1rem 0.5rem;
   background-color: #fafafa;
   border-radius: 4px;
   line-height: 1;
