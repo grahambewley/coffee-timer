@@ -127,6 +127,14 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
     return dur;
   });
 
+  const pourEndWeights = options.pours.map((pour, index) => {
+    let wgt = 0;
+    for (let i = 0; i <= index; i++) {
+      wgt += options.pours[i].percentage * values.water;
+    }
+    return wgt;
+  });
+
   // Millisecond timer side-effects
   useEffect(() => {
     const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
@@ -144,18 +152,39 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
     if (timerRunning && elapsedSeconds >= options.bloomDuration) {
       let tempCurrentStep = 3;
 
+      // Set current step
       for (let i = 0; i < pourEndSeconds.length; i++) {
         if (elapsedSeconds >= pourEndSeconds[i]) {
           tempCurrentStep += 1;
         }
       }
       setCurrentStep(tempCurrentStep);
+
+      // Set current weight
+      let stepStartWeight = bloomAmount;
+      let stepStartSeconds = options.bloomDuration;
+
+      if (tempCurrentStep > 3) {
+        stepStartWeight = pourEndWeights[tempCurrentStep - 4];
+        stepStartSeconds = pourEndSeconds[tempCurrentStep - 4];
+      }
+      const stepEndWeight = pourEndWeights[tempCurrentStep - 3];
+      const stepEndSeconds = pourEndSeconds[tempCurrentStep - 3];
+
+      // Current weight = percentage of time passed * end weight
+      const msIntoStep = elapsedMilliseconds - stepStartSeconds * 1000;
+      const percentIntoStep =
+        msIntoStep / ((stepEndSeconds - stepStartSeconds) * 1000);
+
+      let thisStepWeightAdded = stepEndWeight - stepStartWeight;
+      setDisplayWeight(stepStartWeight + percentIntoStep * thisStepWeightAdded);
     }
   }, [elapsedMilliseconds, pourEndSeconds]);
 
   useEffect(() => {
     if (currentStep > 2 + options.pours.length) {
       resetTimer();
+      setDisplayWeight(values.water);
     }
   }, [currentStep]);
 
@@ -210,7 +239,7 @@ export default function BrewTimer({ options, values, units, bloomAmount }) {
         </TimeWeightElement>
         <TimeWeightElement>
           <span className="label">Weight</span>
-          <p className="value">{displayWeight}</p>
+          <p className="value">{displayWeight.toFixed(1)}</p>
           <span className="small-unit">g/ml</span>
         </TimeWeightElement>
       </TimeWeightWrapper>
